@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amido.Stacks.DynamoDB", "Amido.Stacks.DynamoDB\Amido.Stacks.DynamoDB.csproj", "{7EBD7770-D5DA-43C0-A0F0-84D7BF69E85B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7EBD7770-D5DA-43C0-A0F0-84D7BF69E85B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EBD7770-D5DA-43C0-A0F0-84D7BF69E85B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EBD7770-D5DA-43C0-A0F0-84D7BF69E85B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EBD7770-D5DA-43C0-A0F0-84D7BF69E85B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
