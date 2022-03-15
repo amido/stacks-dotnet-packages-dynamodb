@@ -1,6 +1,6 @@
 # stacks-dotnet-packages-dynamodb
 
-A thin layer on top of the .NET AWS SDK using the [Object Persistence Model](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DotNetSDKHighLevel.html).
+A thin layer on top of the AWS SDK for .NET using the [Object Persistence Model](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DotNetSDKHighLevel.html).
 
 ## Requirements
 
