@@ -8,7 +8,7 @@ variables:
   - name: domain
     value: netcore-api
   - name: self_repo
-    value: stacks-dotnet
+    value: stacks-dotnet-packages-dynamodb
   - name: self_generic_name
     value: stacks-api
 
