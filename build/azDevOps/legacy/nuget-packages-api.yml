@@ -34,28 +34,28 @@ variables:
 stages:
   - stage: BuildAndRelease
     jobs:
-    - job: BuildAndReleasePackage  
-      pool:  
-        vmImage: "windows-2019"  
-      continueOnError: false  
-      steps:  
+    - job: BuildAndReleasePackage
+      pool:
+        vmImage: "windows-2019"
+      continueOnError: false
+      steps:
         # Update Build Number
         - template: azDevOps/azure/templates/v2/steps/build-updatebuildnumber-dotnet.yml@templates
           parameters:
             sourcebranch_name: "$(Build.SourceBranchName)"
             raw_version_number: "$(Version.Number)"
             default_branch: 'main'
-        
+
         # Build and Publish
-        - template: azDevOps/azure/templates/v2/steps/build-dotnet-package.yml@templates  
-          parameters:  
-            # Build Config  
-            test_path: "$(Test.Path)"  
-            package_path: "$(Package.Path)"  
-            # Deploy Config  
-            package_feed: "$(Package.Feed)"  
-            publish_symbols: true  
-            publish_public: "$(Package.Public)"  
-            nuget_service_connection: "$(Package.nuget_service_connection)"  
-            # .NET Core version variables  
-            dotnet_core_version: "5.x.x"
+        - template: azDevOps/azure/templates/v2/steps/build-dotnet-package.yml@templates
+          parameters:
+            # Build Config
+            test_path: "$(Test.Path)"
+            package_path: "$(Package.Path)"
+            # Deploy Config
+            package_feed: "$(Package.Feed)"
+            publish_symbols: true
+            publish_public: "$(Package.Public)"
+            nuget_service_connection: "$(Package.nuget_service_connection)"
+            # .NET Core version variables
+            dotnet_core_version: "6.0.x"
