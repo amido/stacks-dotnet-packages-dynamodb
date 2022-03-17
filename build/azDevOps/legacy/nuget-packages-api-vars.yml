@@ -63,3 +63,20 @@ variables:
   # DEFAULT IMAGE RUNNER
   - name: pool_vm_image
     value: ubuntu-20.04
+
+# BuildVars
+# Path specific for this package, change accordingly
+  - name: Package.Feed
+    value: "Stacks"
+  
+  - name: Package.Public
+    value: true
+
+  - name: Package.nuget_service_connection
+    value: NuGetAmidoStacksServiceConnection
+
+  - name: Package.Path
+    value: "src/Amido.Stacks.DynamoDB"
+
+  - name: Test.Path
+    value: "$(Package.Path).Tests"
