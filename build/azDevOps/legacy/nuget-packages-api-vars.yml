@@ -46,15 +46,15 @@ variables:
   - name: role
     value: backend
 
-  # Versioning
-  - name: version_major
-    value: 6
-  - name: version_minor
-    value: 0
-  - name: version_revision
-    value: $[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]
-  - name: version_number
-    value: $(version_major).$(version_minor).$(version_revision)
+  # # Versioning
+  # - name: version_major
+  #   value: 6
+  # - name: version_minor
+  #   value: 0
+  # - name: version_revision
+  #   value: $[counter(join(variables['version_major'], join('-', variables['version_minor'])), 0)]
+  # - name: version_number
+  #   value: $(version_major).$(version_minor).$(version_revision)
 
   # Scripts directory used by pipeline steps
   # - name: scripts_dir
@@ -66,6 +66,7 @@ variables:
 
 # BuildVars
 # Path specific for this package, change accordingly
+  
   - name: Package.Feed
     value: "Stacks"
   
@@ -80,3 +81,13 @@ variables:
 
   - name: Test.Path
     value: "$(Package.Path).Tests"
+
+# Versioning
+  - name: Version.Major
+    value: 0
+  - name: Version.Minor
+    value: 1
+  - name: Version.Revision
+    value: $[counter(variables['Version.Minor'], 0)]
+  - name: Version.Number
+    value: $(Version.Major).$(Version.Minor).$(Version.Revision)

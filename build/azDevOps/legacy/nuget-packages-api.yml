@@ -39,6 +39,14 @@ stages:
         vmImage: "windows-2019"  
       continueOnError: false  
       steps:  
+        # Update Build Number
+        - template: azDevOps/azure/templates/v2/steps/build-updatebuildnumber-dotnet.yml@templates
+          parameters:
+            sourcebranch_name: "$(Build.SourceBranchName)"
+            raw_version_number: "$(Version.Number)"
+            default_branch: 'main'
+        
+        # Build and Publish
         - template: azDevOps/azure/templates/v2/steps/build-dotnet-package.yml@templates  
           parameters:  
             # Build Config  
