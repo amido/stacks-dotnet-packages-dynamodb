@@ -58,4 +58,4 @@ stages:
             publish_public: "$(Package.Public)"  
             nuget_service_connection: "$(Package.nuget_service_connection)"  
             # .NET Core version variables  
-            dotnet_core_version: "3.1.x"
+            dotnet_core_version: "5.1.x"
