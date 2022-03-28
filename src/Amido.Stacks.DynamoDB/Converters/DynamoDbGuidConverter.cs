@@ -7,23 +7,29 @@ namespace Amido.Stacks.DynamoDB.Converters
 	{
 		public DynamoDBEntry ToEntry(object value)
 		{
-			Guid id = Guid.Parse(value?.ToString());
-			DynamoDBEntry entry = new Primitive
+			if (Guid.TryParse(value.ToString(), out Guid id))
 			{
-				Value = id.ToString()
-			};
+				DynamoDBEntry entry = new Primitive
+				{
+					Value = id.ToString()
+				};
 
-			return entry;
+				return entry;
+			}
+			else
+			{
+				throw new ArgumentNullException();
+			}
 		}
 
 		public object FromEntry(DynamoDBEntry entry)
 		{
-			Primitive primitive = entry as Primitive;
+			Primitive primitive = entry.AsPrimitive();
 			if (primitive == null || !(primitive.Value is String) || string.IsNullOrEmpty((string)primitive.Value))
-				throw new ArgumentOutOfRangeException();
+				throw new ArgumentNullException();
 
-			Guid id = Guid.Parse(primitive.Value.ToString());
-			return id;
+			if (Guid.TryParse(primitive.Value.ToString(), out Guid id)) return id;
+			else throw new ArgumentNullException();
 		}
 	}
 }
