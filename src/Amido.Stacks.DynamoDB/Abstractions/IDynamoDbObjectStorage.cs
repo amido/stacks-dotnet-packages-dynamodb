@@ -6,6 +6,6 @@ namespace Amido.Stacks.DynamoDB.Abstractions
 	{
 		Task<OperationResult> DeleteAsync(string partitionKey);
 		Task<OperationResult<TEntity>> GetByIdAsync(string partitionKey);
-		Task<OperationResult<TEntity>> SaveAsync(TEntity document);
+		Task<OperationResult<TEntity>> SaveAsync(string partitionKey, TEntity document);
 	}
 }
