@@ -40,6 +40,7 @@ namespace Amido.Stacks.DynamoDB.Tests
 			// Assert
 			Assert.NotNull(result);
 			Assert.IsType<Guid>(result);
+			Assert.Equal(id, result);
 		}
 	}
 }
