@@ -5,21 +5,28 @@ using Amido.Stacks.Data.Documents;
 using Amido.Stacks.DynamoDB.Abstractions;
 using Amido.Stacks.DynamoDB.Logging;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Amido.Stacks.DynamoDB
 {
 	public class DynamoDbObjectStorage<TEntity> : IDynamoDbObjectStorage<TEntity> where TEntity : class
 	{
-		ILogger<DynamoDbObjectStorage<TEntity>> logger;
+		private ILogger<DynamoDbObjectStorage<TEntity>> logger;
+		private readonly IDynamoDBContext context;
+		private readonly IOptions<DynamoDbConfiguration> config;
+		private readonly DynamoDBOperationConfig opearationConfig;
 
-		private readonly DynamoDBContext context;
-		private readonly IAmazonDynamoDB client;
-
-		public DynamoDbObjectStorage(ILogger<DynamoDbObjectStorage<TEntity>> logger, IAmazonDynamoDB dynamoDbClient)
+		public DynamoDbObjectStorage(ILogger<DynamoDbObjectStorage<TEntity>> logger, IDynamoDBContext context, IOptions<DynamoDbConfiguration> config)
 		{
-			this.logger = logger;
-			client = dynamoDbClient;
-			context = new DynamoDBContext(dynamoDbClient);
+			this.logger = logger ?? throw new ArgumentException(nameof(logger));
+			this.context = context ?? throw new ArgumentException(nameof(context));
+			this.config = config ?? throw new ArgumentException(nameof(config));
+
+			opearationConfig = new()
+			{
+				OverrideTableName = config.Value.TableName,
+				TableNamePrefix = config.Value.TablePrefix
+			};
 		}
 
 		public async Task<OperationResult> DeleteAsync(string partitionKey)
@@ -28,7 +35,7 @@ namespace Amido.Stacks.DynamoDB
 			{
 				logger.DeleteRequested(partitionKey);
 
-				await context.DeleteAsync<TEntity>(partitionKey);
+				await context.DeleteAsync<TEntity>(partitionKey, opearationConfig);
 
 				logger.DeleteCompleted(partitionKey);
 
@@ -61,7 +68,7 @@ namespace Amido.Stacks.DynamoDB
 			{
 				logger.GetByIdRequested(partitionKey);
 
-				var result = await context.LoadAsync<TEntity>(partitionKey);
+				var result = await context.LoadAsync<TEntity>(partitionKey, opearationConfig);
 
 				logger.GetByIdCompleted(partitionKey);
 
@@ -93,7 +100,7 @@ namespace Amido.Stacks.DynamoDB
 			{
 				logger.SaveRequested(partitionKey);
 
-				await context.SaveAsync(document);
+				await context.SaveAsync(document, opearationConfig);
 
 				logger.SaveCompleted(partitionKey);
 
