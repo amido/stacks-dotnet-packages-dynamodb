@@ -6,7 +6,7 @@ A thin layer on top of the AWS SDK for .NET using the [Object Persistence Model]
 
 You need a DynamoDB instance in order to use this library. You can follow the official instructions provided by AWS [here](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SettingUp.DynamoWebService.html).
 
-Also the object(s) from your application that you want to store in DynamoDB have to conform to the [Object Persistence Model](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DotNetSDKHighLevel.html). That means your object and it's fields will need to have certain attribute annotations like `[DynamoDBTable("Menu")]` etc.
+It should be noted that the object(s) from your application that you want to store in DynamoDB have to conform to the [Object Persistence Model](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DotNetSDKHighLevel.html).
 
 ## Configuration
 
@@ -20,10 +20,20 @@ This library assumes you'll use the `AWS CLI` tools and will have configured you
 
 ## Usage
 
-Using the library is simple. The only thing you have to do is call the `AddDynamoDb()` service collection extension method in the project where you want to connect to DynamoDB.
+Using the library is simple. You have to call the `AddDynamoDb()` service collection extension method and inject the configuraiton in the project where you want to connect to DynamoDB.
 
 ```csharp
+services.Configure<DynamoDbConfiguration>(context.Configuration.GetSection("DynamoDb"));
 services.AddDynamoDB();
+```
+
+The configuration will be read from the `DynamoDb` section located in the `appsettings.json` file
+
+```json
+"DynamoDb": {
+    "TableName": "Menu",
+    "TablePrefix": ""
+}
 ```
 
 This will give you access to the `IDynamoDbObjectStorage` which you'll use to perform CRUD operations with in DynamoDB.
