@@ -18,9 +18,9 @@ public class DynamoDbObjectStorage<TEntity> : IDynamoDbObjectStorage<TEntity> wh
 
 	public DynamoDbObjectStorage(ILogger<DynamoDbObjectStorage<TEntity>> logger, IDynamoDBContext context, IOptions<DynamoDbConfiguration> config)
 	{
-		this.logger = logger ?? throw new ArgumentException(nameof(logger));
-		this.context = context ?? throw new ArgumentException(nameof(context));
-		this.config = config ?? throw new ArgumentException(nameof(config));
+		this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		this.context = context ?? throw new ArgumentNullException(nameof(context));
+		this.config = config ?? throw new ArgumentNullException(nameof(config));
 
 		opearationConfig = new()
 		{
