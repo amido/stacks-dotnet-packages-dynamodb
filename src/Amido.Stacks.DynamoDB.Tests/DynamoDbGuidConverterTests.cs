@@ -6,41 +6,39 @@ using Amido.Stacks.DynamoDB.Converters;
 using AutoFixture.Xunit2;
 using Xunit;
 
-namespace Amido.Stacks.DynamoDB.Tests
+namespace Amido.Stacks.DynamoDB.Tests;
+
+[Trait("TestType", "UnitTests")]
+public class DynamoDbGuidConverterTests
 {
-
-	[Trait("TestType", "UnitTests")]
-	public class DynamoDbGuidConverterTests
+	[Theory, AutoData]
+	public void GuidToDynamoDbObject(Guid id)
 	{
-		[Theory, AutoData]
-		public void GuidToDynamoDbObject(Guid id)
-		{
-			// Arrange
-			IPropertyConverter converter = new DynamoDbGuidConverter();
+		// Arrange
+		IPropertyConverter converter = new DynamoDbGuidConverter();
 
-			// Act
-			var result = converter.ToEntry(id);
+		// Act
+		var result = converter.ToEntry(id);
 
-			// Assert
-			Assert.NotNull(result);
-			Assert.Equal(id.ToString(), result.AsPrimitive().Value.ToString());
-		}
+		// Assert
+		Assert.NotNull(result);
+		Assert.Equal(id.ToString(), result.AsPrimitive().Value.ToString());
+	}
 
-		[Theory, AutoData]
-		public void DynamoDbObjectToGuid(Guid id)
-		{
-			// Arrange
-			IPropertyConverter converter = new DynamoDbGuidConverter();
+	[Theory, AutoData]
+	public void DynamoDbObjectToGuid(Guid id)
+	{
+		// Arrange
+		IPropertyConverter converter = new DynamoDbGuidConverter();
 
-			var primitive = new Primitive(id.ToString());
+		var primitive = new Primitive(id.ToString());
 
-			// Act
-			var result = converter.FromEntry(primitive);
+		// Act
+		var result = converter.FromEntry(primitive);
 
-			// Assert
-			Assert.NotNull(result);
-			Assert.IsType<Guid>(result);
-			Assert.Equal(id, result);
-		}
+		// Assert
+		Assert.NotNull(result);
+		Assert.IsType<Guid>(result);
+		Assert.Equal(id, result);
 	}
 }
