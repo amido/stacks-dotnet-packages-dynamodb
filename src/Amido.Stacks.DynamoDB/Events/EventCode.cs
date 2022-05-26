@@ -15,4 +15,12 @@ public enum EventCode
 	DeleteRequested = 123456821,
 	DeleteCompleted = 123456822,
 	DeleteFailed = 123456823,
+
+	ScanAsyncRequested = 123456831,
+	ScanAsyncCompleted = 123456832,
+	ScanAsyncFailed = 123456833,
+
+	QueryAsyncRequested = 123456841,
+	QueryAsyncCompleted = 123456842,
+	QueryAsyncFailed = 123456843,
 }

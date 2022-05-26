@@ -86,6 +86,51 @@ public static class LogDefinition
 			"DynamoDB: Delete failed for document (Partition:{Partition}). Reason: {Reason}"
 		);
 
+
+	// ScanAsync / QueryAsync
+
+	private static readonly Action<ILogger, Exception> scanAsyncRequested =
+		LoggerMessage.Define(
+			LogLevel.Information,
+			new EventId((int)EventCode.ScanAsyncRequested, nameof(EventCode.ScanAsyncRequested)),
+			"DynamoDB: ScanAsync requested for document"
+		);
+
+	private static readonly Action<ILogger, Exception> scanAsyncCompleted =
+		LoggerMessage.Define(
+			LogLevel.Information,
+			new EventId((int)EventCode.ScanAsyncCompleted, nameof(EventCode.ScanAsyncCompleted)),
+			"DynamoDB: ScanAsync completed for document"
+		);
+
+	private static readonly Action<ILogger, string, Exception> scanAsyncFailed =
+		LoggerMessage.Define<string>(
+			LogLevel.Warning,
+			new EventId((int)EventCode.ScanAsyncFailed, nameof(EventCode.ScanAsyncFailed)),
+			"DynamoDB: ScanAsync failed for document. Reason: {Reason}"
+		);
+
+	private static readonly Action<ILogger, Exception> queryAsyncRequested =
+		LoggerMessage.Define(
+			LogLevel.Information,
+			new EventId((int)EventCode.QueryAsyncRequested, nameof(EventCode.QueryAsyncRequested)),
+			"DynamoDB: QueryAsync requested for document"
+		);
+
+	private static readonly Action<ILogger, Exception> queryAsyncCompleted =
+		LoggerMessage.Define(
+			LogLevel.Information,
+			new EventId((int)EventCode.QueryAsyncCompleted, nameof(EventCode.QueryAsyncCompleted)),
+			"DynamoDB: QueryAsync completed for document"
+		);
+
+	private static readonly Action<ILogger, string, Exception> queryAsyncFailed =
+		LoggerMessage.Define<string>(
+			LogLevel.Warning,
+			new EventId((int)EventCode.QueryAsyncFailed, nameof(EventCode.QueryAsyncFailed)),
+			"DynamoDB: QueryAsync failed for document. Reason: {Reason}"
+		);
+
 	//Exception
 
 	/// <summary>
@@ -149,6 +194,40 @@ public static class LogDefinition
 	public static void DeleteFailed(this ILogger logger, string partitionKey, string reason, Exception ex)
 	{
 		deleteFailed(logger, partitionKey, reason, null!);
+		LogException(logger, ex);
+	}
+
+	// ScanAsync / QueryAsync
+
+	public static void ScanAsyncRequested(this ILogger logger)
+	{
+		scanAsyncRequested(logger, null!);
+	}
+
+	public static void ScanAsyncCompleted(this ILogger logger)
+	{
+		scanAsyncCompleted(logger, null!);
+	}
+
+	public static void ScanAsyncFailed(this ILogger logger, string reason, Exception ex)
+	{
+		scanAsyncFailed(logger, reason, null!);
+		LogException(logger, ex);
+	}
+
+	public static void QueryAsyncRequested(this ILogger logger)
+	{
+		queryAsyncRequested(logger, null!);
+	}
+
+	public static void QueryAsyncCompleted(this ILogger logger)
+	{
+		queryAsyncCompleted(logger, null!);
+	}
+
+	public static void QueryAsyncFailed(this ILogger logger, string reason, Exception ex)
+	{
+		queryAsyncFailed(logger, reason, null!);
 		LogException(logger, ex);
 	}
 }

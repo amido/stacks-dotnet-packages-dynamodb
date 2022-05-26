@@ -13,6 +13,7 @@ public static class ServiceCollectionExtensions
 		services.AddAWSService<IAmazonDynamoDB>();
 		services.AddTransient<IDynamoDBContext, DynamoDBContext>();
 		services.AddTransient(typeof(IDynamoDbObjectStorage<>), typeof(DynamoDbObjectStorage<>));
+		services.AddTransient(typeof(IDynamoDbObjectSearch<>), typeof(DynamoDbObjectSearch<>));
 		return services;
 	}
 }
