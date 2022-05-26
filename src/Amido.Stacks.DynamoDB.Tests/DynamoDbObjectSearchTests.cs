@@ -55,7 +55,7 @@ public class DynamoDbObjectSearchTests
     }
 
     [Fact]
-    public async Task ObjectSearch_ScanAsync_Unsuccessful()
+    public async Task ObjectSearch_ScanAsync_Unsuccessful_When_ScanOperationConfigNull()
     {
         // Arrange
         var sut = new DynamoDbObjectSearch<FakeMenu>(logger, context, config);
@@ -69,7 +69,7 @@ public class DynamoDbObjectSearchTests
     }
 
     [Fact]
-    public async Task ObjectSearch_QueryAsync_Unsuccessful()
+    public async Task ObjectSearch_QueryAsync_Unsuccessful_When_QueryOperationConfigNull()
     {
         // Arrange
         var sut = new DynamoDbObjectSearch<FakeMenu>(logger, context, config);

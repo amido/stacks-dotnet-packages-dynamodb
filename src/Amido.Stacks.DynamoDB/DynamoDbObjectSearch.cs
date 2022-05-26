@@ -1,7 +1,9 @@
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.Runtime;
 using Amido.Stacks.Data.Documents;
 using Amido.Stacks.DynamoDB.Abstractions;
+using Amido.Stacks.DynamoDB.Logging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -30,53 +32,119 @@ public class DynamoDbObjectSearch<TEntity> : IDynamoDbObjectSearch<TEntity> wher
     // Note:
     // ScanInternalAsync and QueryInternalAsync cannot be unit tested because IDynamoDBContext.GetTargetTable returns and object that cannot be mocked.
     // See here: https://github.com/aws/aws-sdk-net/issues/1310
-    public async Task<OperationResult<List<TEntity>>> ScanAsync(ScanOperationConfig scanOperationConfig)
+    public async Task<OperationResult<List<TEntity>>> ScanAsync(ScanFilter scanFilter)
     {
-        if (scanOperationConfig is null)
-            return new OperationResult<List<TEntity>>(false, new List<TEntity>(), null);
-
-        return await ScanInternalAsync(scanOperationConfig);
-    }
-
-    private async Task<OperationResult<List<TEntity>>> ScanInternalAsync(ScanOperationConfig scanOperationConfig)
-    {
-        var dbResults = new List<TEntity>();
-        var table = context.GetTargetTable<TEntity>();
-
-        var search = table.Scan(scanOperationConfig);
-
-        var resultsSet = await search.GetNextSetAsync();
-
-        if (resultsSet.Any())
+        if (scanFilter is null)
         {
-            dbResults.AddRange(context.FromDocuments<TEntity>(resultsSet));
+            return new OperationResult<List<TEntity>>(
+                false,
+                default!,
+                null);
         }
 
-        return new OperationResult<List<TEntity>>(true, dbResults, null);
+        return await ScanInternalAsync(scanFilter);
     }
 
-    public async Task<OperationResult<List<TEntity>>> QueryAsync(QueryOperationConfig queryOperationConfig)
+    private async Task<OperationResult<List<TEntity>>> ScanInternalAsync(ScanFilter scanFilter)
     {
-        if (queryOperationConfig is null)
-            return new OperationResult<List<TEntity>>(false, new List<TEntity>(), null);
-
-        return await QueryInternalAsync(queryOperationConfig);
-    }
-
-    private async Task<OperationResult<List<TEntity>>> QueryInternalAsync(QueryOperationConfig queryOperationConfig)
-    {
-        var dbResults = new List<TEntity>();
-        var table = context.GetTargetTable<TEntity>();
-
-        var search = table.Query(queryOperationConfig);
-
-        var resultsSet = await search.GetNextSetAsync();
-
-        if (resultsSet.Any())
+        try
         {
-            dbResults.AddRange(context.FromDocuments<TEntity>(resultsSet));
+            logger.ScanAsyncRequested();
+
+            var dbResults = new List<TEntity>();
+            var table = context.GetTargetTable<TEntity>();
+
+            var search = table.Scan(scanFilter);
+
+            var resultsSet = await search.GetNextSetAsync();
+
+            if (resultsSet.Any())
+            {
+                dbResults.AddRange(context.FromDocuments<TEntity>(resultsSet));
+            }
+
+            logger.ScanAsyncCompleted();
+
+            return new OperationResult<List<TEntity>>(
+                true,
+                dbResults,
+                null);
+        }
+        catch (AmazonServiceException ex)
+        {
+            logger.ScanAsyncFailed(ex.Message, ex);
+
+            return new OperationResult<List<TEntity>>(
+                false,
+                default!,
+                null);
+        }
+        catch (AmazonClientException ex)
+        {
+            logger.ScanAsyncFailed(ex.Message, ex);
+
+            return new OperationResult<List<TEntity>>(
+                false,
+                default!,
+                null);
+        }
+    }
+
+    public async Task<OperationResult<List<TEntity>>> QueryAsync(QueryFilter queryFilter)
+    {
+        if (queryFilter is null)
+        {
+            return new OperationResult<List<TEntity>>(
+                false,
+                default!,
+                null);
         }
 
-        return new OperationResult<List<TEntity>>(true, dbResults, null);
+        return await QueryInternalAsync(queryFilter);
+    }
+
+    private async Task<OperationResult<List<TEntity>>> QueryInternalAsync(QueryFilter queryFilter)
+    {
+        try
+        {
+            logger.QueryAsyncRequested();
+
+            var dbResults = new List<TEntity>();
+            var table = context.GetTargetTable<TEntity>();
+
+            var search = table.Query(queryFilter);
+
+            var resultsSet = await search.GetNextSetAsync();
+
+            if (resultsSet.Any())
+            {
+                dbResults.AddRange(context.FromDocuments<TEntity>(resultsSet));
+            }
+
+            logger.QueryAsyncCompleted();
+
+            return new OperationResult<List<TEntity>>(
+                true,
+                dbResults,
+                null);
+        }
+        catch (AmazonServiceException ex)
+        {
+            logger.QueryAsyncFailed(ex.Message, ex);
+
+            return new OperationResult<List<TEntity>>(
+                false,
+                default!,
+                null);
+        }
+        catch (AmazonClientException ex)
+        {
+            logger.QueryAsyncFailed(ex.Message, ex);
+
+            return new OperationResult<List<TEntity>>(
+                false,
+                default!,
+                null);
+        }
     }
 }
