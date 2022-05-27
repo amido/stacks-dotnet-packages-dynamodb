@@ -38,6 +38,8 @@ The configuration will be read from the `DynamoDb` section located in the `appse
 
 This will give you access to the `IDynamoDbObjectStorage` which you'll use to perform CRUD operations with in DynamoDB.
 
+This will also give you access to the `IDynamoDbObjectSearch` which you'll use to perform any Scan / Query operations with in DynamoDB.
+
 ### Data Converters
 
 The package provides a converter from `Guid` to `string` since DynamoDb doesn't understand UUID's. The `DynamoDbGuidConverter` can be found in the `Amido.Stacks.DynamoDB.Converters` namespace.
